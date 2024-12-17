@@ -145,16 +145,24 @@ jal call_parabol
 sub s5, zero, a0
 
 #shdkfhsadkjfhlkasjdhflkasjdhffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-addi t5, s6, -15
-addi t6, s6, 15
+addi t0, s6, -10
+addi t1, s6, 10
 
 loop_through_points:
-bgt t5, t6, end_loop_through_points
+bgt t0, t1, end_loop_through_points
 
 
-add a0, zero, t5
+add a0, zero, t0
 #goi ham tinh toa do x' va y', tra ve gia tri cua x' va y' trong 2 register a0 va a1
+addi sp, sp, -8
+sw t0, 4(sp)
+sw t1, 0(sp)
 jal call_parabol
+
+
+lw t0, 4(sp)
+lw t1, 0(sp)
+addi sp, sp, 8
 
 addi a0, a0, 255
 
@@ -168,7 +176,6 @@ addi a1, a1, -255
 sub a1, zero, a1
 #goi ham ve voi input la a0 va a1
 jal plot
-addi t5,t5,1
 j loop_through_points
  
 
@@ -184,8 +191,7 @@ addi sp, sp, -4
 sw ra, 0(sp)
 
 mul a1, a0, a0
-li t0, 7
-div a0, a0, t0 
+
 
 lw ra, 0(sp)
 addi sp, sp, 4
