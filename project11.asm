@@ -16,17 +16,18 @@ choose_color_string: .asciz "\nChoose your graph color:\n1.RED\n2.GREEN\n3.BLUE\
 
 
 menu_loop:
+#in ra string menu
 li a7, 4
 la a0,menu_string
 ecall
 
+#doc input tu nguoi dung
 li a7,5
 ecall
-
 addi a0, a0, -1
 beqz a0, function
 
-
+#neu nguoi dung con 2 -> exit
 exit:
 li a7, 4
 la a0, exit_string
@@ -41,10 +42,12 @@ ecall
 function:
 input:
 
+#in ra man hinh string yeu cau nhap mau
 li a7,4
 la a0, choose_color_string
 ecall
 
+#doc inupt cua nguoi dung
 li a7,5
 ecall
 
@@ -172,8 +175,9 @@ end_loop_through_points:
 j menu_loop
 
 
-
+#ham tinh toa do ax^2 + bx + c, voi input la a0 = x
 call_parabol:
+mul a0, a0, a0
 jr ra
 
 
@@ -197,10 +201,9 @@ jr ra
 
 
 clear_bitmap:
-
-
 addi sp, sp, -4
 sw, ra, 0(sp)
+
 
 
 lw ra, 0(sp)
