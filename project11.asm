@@ -128,13 +128,10 @@ li t5, 2
 mul t6, t5, s1
 sub t5, zero, s2
 div t6, t5, t6
+
 add s6, zero, t6
-
-#j menu_loop
-
-
 #tim khoang tinh tien theo x va luu vao s4
-addi s4, t6, -255  
+addi s4, t6, 0  
 sub s4, zero, s4
 
 add a0, t6, zero
@@ -142,11 +139,11 @@ add a0, t6, zero
 jal call_parabol
 
 #tim khoang tinh tien theo y va luu vao s5
-sub s5, zero, a0
+sub s5, zero, a1
 
-#shdkfhsadkjfhlkasjdhflkasjdhffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-addi t5, s6, -15
-addi t6, s6, 15
+
+addi t5, s6, 0
+addi t6, s6, 256
 
 loop_through_points:
 bgt t5, t6, end_loop_through_points
@@ -156,17 +153,31 @@ add a0, zero, t5
 #goi ham tinh toa do x' va y', tra ve gia tri cua x' va y' trong 2 register a0 va a1
 jal call_parabol
 
+#tinh tien den toa do
+add a0, a0, s4
+add a1, a1, s5
+
+li s11, 5
+#div a0, a0, s11
+div a1, a1, s11
+
+
 addi a0, a0, 255
+
 
 #neu a < 0 cong len 512 don vi
 beq s8, zero, skip_shift
 addi a1, a1, 512
 
 skip_shift:
+
 # tinh y' = -y' + 255 de dao nguoc do thi
-addi a1, a1, -255
+addi a1, a1, -512
 sub a1, zero, a1
 #goi ham ve voi input la a0 va a1
+
+
+
 jal plot
 addi t5,t5,1
 j loop_through_points
@@ -174,6 +185,49 @@ j loop_through_points
 
 end_loop_through_points: 
 
+
+
+
+
+
+addi t5, s6, 0
+addi t6, s6, -256
+
+loop_through_points2:
+blt t5, t6, end_loop_through_points2
+
+
+add a0, zero, t5
+#goi ham tinh toa do x' va y', tra ve gia tri cua x' va y' trong 2 register a0 va a1
+jal call_parabol
+
+#tinh tien den toa do
+add a0, a0, s4
+add a1, a1, s5
+
+li s11, 5
+#div a0, a0, s11
+div a1, a1, s11
+
+
+addi a0, a0, 255
+
+#neu a < 0 cong len 512 don vi
+beq s8, zero, skip_shift2
+addi a1, a1, 512
+
+skip_shift2:
+
+# tinh y' = -y' + 255 de dao nguoc do thi
+addi a1, a1, -512
+sub a1, zero, a1
+#goi ham ve voi input la a0 va a1
+jal plot
+addi t5,t5,-1
+j loop_through_points2
+ 
+
+end_loop_through_points2:
 
 j menu_loop
 
@@ -183,9 +237,15 @@ call_parabol:
 addi sp, sp, -4
 sw ra, 0(sp)
 
-mul a1, a0, a0
-li t0, 7
-div a0, a0, t0 
+# Step 7: compute y for each of the x_gen
+	# This function compute y = ax^2 + bx + c
+	# input: x-coordinate stored in a0
+	# output: y-coordinate stored in a1
+	mul a1, a0, a0 # a4 = x^2
+	mul a1, a1, s1 # a4 = ax^2
+	mul a5, a0, s2 # a5 = bx
+	add a1, a1, a5 # a4 = ax^2 + bx
+	add a1, a1, s3 # a4 = ax^2 + bx + c
 
 lw ra, 0(sp)
 addi sp, sp, 4
@@ -197,6 +257,14 @@ plot:
 addi sp, sp, -4
 sw ra, 0(sp)
 
+li t0, 512
+
+blt a0, zero, end_plot
+bgt a0, t0, end_plot
+
+blt a1, zero, end_plot
+bgt a1, t0, end_plot
+
 li t1, 512
 add t0, a1, zero
 mul t0, t0,t1 #des = 512*y
@@ -206,6 +274,9 @@ slli, t0, t0, 2 # des = 4*(x + 512*y)
 li t2, MONITOR_SCREEN 
 add t2, t2, t0
 sw s7, 0(t2)
+
+end_plot:
+
 lw ra, 0(sp)
 addi sp, sp, 4
 jr ra

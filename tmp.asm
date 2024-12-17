@@ -128,11 +128,8 @@ li t5, 2
 mul t6, t5, s1
 sub t5, zero, s2
 div t6, t5, t6
+
 add s6, zero, t6
-
-#j menu_loop
-
-
 #tim khoang tinh tien theo x va luu vao s4
 addi s4, t6, -255  
 sub s4, zero, s4
@@ -144,38 +141,34 @@ jal call_parabol
 #tim khoang tinh tien theo y va luu vao s5
 sub s5, zero, a0
 
-#shdkfhsadkjfhlkasjdhflkasjdhffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-addi t0, s6, -10
-addi t1, s6, 10
+
+addi t5, s6, -15
+addi t6, s6, 15
 
 loop_through_points:
-bgt t0, t1, end_loop_through_points
+bgt t5, t6, end_loop_through_points
 
 
-add a0, zero, t0
+add a0, zero, t5
 #goi ham tinh toa do x' va y', tra ve gia tri cua x' va y' trong 2 register a0 va a1
-addi sp, sp, -8
-sw t0, 4(sp)
-sw t1, 0(sp)
 jal call_parabol
 
-
-lw t0, 4(sp)
-lw t1, 0(sp)
-addi sp, sp, 8
-
-addi a0, a0, 255
+#tinh tien den toa do
+add a0, a0, s4
+add a1, a1, s5
 
 #neu a < 0 cong len 512 don vi
 beq s8, zero, skip_shift
 addi a1, a1, 512
 
 skip_shift:
+
 # tinh y' = -y' + 255 de dao nguoc do thi
-addi a1, a1, -255
+addi a1, a1, -512
 sub a1, zero, a1
 #goi ham ve voi input la a0 va a1
 jal plot
+addi t5,t5,1
 j loop_through_points
  
 
@@ -190,8 +183,15 @@ call_parabol:
 addi sp, sp, -4
 sw ra, 0(sp)
 
-mul a1, a0, a0
-
+# Step 7: compute y for each of the x_gen
+	# This function compute y = ax^2 + bx + c
+	# input: x-coordinate stored in a0
+	# output: y-coordinate stored in a1
+	mul a1, a0, a0 # a4 = x^2
+	mul a1, a1, s1 # a4 = ax^2
+	mul a5, a0, s2 # a5 = bx
+	add a1, a1, a5 # a4 = ax^2 + bx
+	add a1, a1, s3 # a4 = ax^2 + bx + c
 
 lw ra, 0(sp)
 addi sp, sp, 4
