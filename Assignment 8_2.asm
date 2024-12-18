@@ -10,6 +10,7 @@ main:
 	li  t1, IN_ADDRESS_HEXA_KEYBOARD 
 	li  t2, OUT_ADDRESS_HEXA_KEYBOARD 
 	li  t3, 0x01 # start checking from row 1
+
 	
 polling:          
 	sb  t3, 0(t1) # must reassign expected row 
@@ -387,22 +388,56 @@ case_15:
 
 #ham tinh nhan 3 tham so dau vao a0, a1, a2 va return lai vao a0
 tinh: 
+	addi sp, sp, -8
+	sw ra, 4(sp)
+	sw t0, 0(sp)
+
+
+	li t0, 10         # t0 = 10
+    beq a1, t0, cong   # N?u a1 == 10, nh?y t?i ADD
+
+    li t0, 11         # t0 = 11
+    beq a1, t0, truu   # N?u a1 == 11, nh?y t?i SUB
+
+    li t0, 12         # t0 = 12
+    beq a1, t0, nhan   # N?u a1 == 12, nh?y t?i MUL
+
+    li t0, 13         # t0 = 13
+    beq a1, t0, chia   # N?u a1 == 13, nh?y t?i DIV
+
+    li t0, 14         # t0 = 14
+    beq a1, t0, modun   # N?u a1 == 14, nh?y t?i MOD
+
+    # N?u không có giá tr? h?p l?, return giá tr? ban ??u c?a a0
+                # Tr? v? a0
+	end_tinh:
+
+
+
+	lw ra, 4(sp)
+	lw t0, 0(sp)
+	addi sp, sp, 8
 jr ra
 
 #input a0, a1 output a0
 cong:
-jr ra
+add a0, a0, a2
+j end_tinh
 
 chia:
+div a0, a0, a2
 jr ra
 
 nhan:
-jr ra
+mul a0, a0, a2
+j end_tinh
 
 tru:
-jr ra
+sub a0, a0, a2
+j end_tinh
 
 modun:
-jr ra
+rem a0, a0, a3
+j end_tinh
 
 
