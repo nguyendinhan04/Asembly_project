@@ -44,7 +44,11 @@ update:
 	
 	# after converting t5
 	li s0, 10		# Use s0 to find the last digit (remaining when divided by 10)
-    bge t5, s0,logic_handling
+	blt t5, s0, skip_set_s1
+	li s1, 0
+	 
+	 skip_set_s1: 
+    	bge t5, s0,logic_handling
 #=================================================DISPLAY=================================================
 	addi    sp, sp, -24     # Allocate 24 bytes on the stack to avoid replacing important register
 	sw      t1, 0(sp)       # Save t1
@@ -353,9 +357,12 @@ update:
 END:    	    	    	
     	# After the logic handling, add the last digit to the current number
     	li s0, 10
+    	bge t5, s0, skip_shifing
+    	
     	mul s1, s1, s0 		      # shift the whole number to the left
 	add s1, s1, t5		      # add the last digit to the current number
 	
+	skip_shifing:
 	li t5, 0		      # after the update, reset t5 to 0 to avoid the program jumping into update again
 	j polling		      # jump back to polling
 	
@@ -543,7 +550,7 @@ sub a0, a0, a2
 j end_tinh
 
 modun:
-rem a0, a0, a3
+rem a0, a0, a2
 j end_tinh
 #======================================================
 
@@ -589,6 +596,9 @@ end_pcase:
 	ecall
 	mv a0, s7
 	li a7, 1
+	ecall
+	la a0, newline
+	li a7, 4
 	ecall
 	jr ra
 	
