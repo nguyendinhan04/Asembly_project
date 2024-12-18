@@ -10,7 +10,7 @@ main:
 	li  t1, IN_ADDRESS_HEXA_KEYBOARD 
 	li  t2, OUT_ADDRESS_HEXA_KEYBOARD 
 	li  t3, 0x01 # start checking from row 1
-
+	li s8, 1
 	
 polling:          
 	sb  t3, 0(t1) # must reassign expected row 
@@ -42,8 +42,8 @@ update:
 	li s2, 1
 	li s3, 9
 	
-	blt t5, s2, 1ELSE_IF_1
-	bgt t5, s3, 1ELSE_IF_1
+	blt t5, s2, oneELSE_IF_1
+	bgt t5, s3, oneELSE_IF_1
 	#thuc hien neu la so
 		li s2, 1
 		beq s8, s2,p11
@@ -60,7 +60,7 @@ update:
 		
 		p11: 
 			li s2, 10
-			mul s4, s2
+			mul s4, s2, s4
 			add s4, s4, t5
 			j end1
 		
@@ -71,7 +71,7 @@ update:
 		
 		p13:
 			li s2, 10
-			mul s6, s2
+			mul s6, s2, s6
 			add s6, s4, t5	
 			j end1	
 		
@@ -83,12 +83,12 @@ update:
 		end1:
 	j END
 	
-	1ELSE_IF_1: 
+	oneELSE_IF_1: 
 	li s2, 10
-	li s3, 15
+	li s3, 14
 	
-	blt t5, s2, 1ELSE_IF_2
-	bgt t5, s3, 1ELSE_IF_2
+	blt t5, s2, oneELSE_IF_2
+	bgt t5, s3, oneELSE_IF_2
 	#thuc hien neu la dau
 		li s2, 1
 		beq s8, s2,p21
@@ -104,7 +104,7 @@ update:
 		j end2
 		
 		p21: 
-			addi s8, 0, 2
+			addi s8, zero, 2
 			add s5, zero, t5
 			j end2
 		
@@ -147,7 +147,7 @@ update:
 		end2:
 	j END
 	
-	1ELSE_IF_2:
+	oneELSE_IF_2:
 	li s2, 15
 	bne t5, s2, END 
 	#thuc hien neu la = 
@@ -207,6 +207,7 @@ update:
                 add a0, zero, s4
                 add a1, zero, s5
                 add a2, zero, s6
+                #add s7, s4, s6
                 jal tinh
                 add s7, zero, a0
                 li s8, 4
@@ -280,7 +281,7 @@ convert:
     li t6, 0x41          # Check for 0x41
     beq t5, t6, case_2
     
-    li t6, 0x81          # Check for 0x81
+    li t6, 0xffffff81          # Check for 0x81
     beq t5, t6, case_3
     
     li t6, 0x12          # Check for 0x12
@@ -292,7 +293,7 @@ convert:
     li t6, 0x42          # Check for 0x42
     beq t5, t6, case_6
     
-    li t6, 0x82          # Check for 0x82
+    li t6, 0xffffff82          # Check for 0x82
     beq t5, t6, case_7
     
     li t6, 0x14          # Check for 0x14
@@ -304,7 +305,7 @@ convert:
     li t6, 0x44          # Check for 0x44
     beq t5, t6, case_10
     
-    li t6, 0x84          # Check for 0x84
+    li t6, 0xffffff84          # Check for 0x84
     beq t5, t6, case_11
     
     li t6, 0x18          # Check for 0x18
@@ -316,7 +317,7 @@ convert:
     li t6, 0x48          # Check for 0x48
     beq t5, t6, case_14
     
-    li t6, 0x88          # Check for 0x88
+    li t6, 0xffffff88          # Check for 0x88
     beq t5, t6, case_15
 
 # Define all case labels
@@ -397,7 +398,7 @@ tinh:
     beq a1, t0, cong   # N?u a1 == 10, nh?y t?i ADD
 
     li t0, 11         # t0 = 11
-    beq a1, t0, truu   # N?u a1 == 11, nh?y t?i SUB
+    beq a1, t0, tru   # N?u a1 == 11, nh?y t?i SUB
 
     li t0, 12         # t0 = 12
     beq a1, t0, nhan   # N?u a1 == 12, nh?y t?i MUL
