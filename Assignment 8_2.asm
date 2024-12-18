@@ -64,10 +64,8 @@ update:
 			j end1
 		
 		p12:
-			addi s8, s8, 1
-			li s2, 10
-			mul s6, s2
-			add s6, s4, t5
+			addi s8, zero, 3
+			add s6, zero, t5
 			j end1
 		
 		p13:
@@ -77,6 +75,8 @@ update:
 			j end1	
 		
 		p14:
+            li s8, 1
+            add s4, zero, t5
 			j end1
 		
 		end1:
@@ -103,7 +103,7 @@ update:
 		j end2
 		
 		p21: 
-			addi s8, s8, 1
+			addi s8, 0, 2
 			add s5, zero, t5
 			j end2
 		
@@ -112,153 +112,35 @@ update:
 			j end2
 		
 		p23:
-			li s2, 10
-			beq s5, s2, p231
-			
-			li s2, 11
-			beq s5, s2, p232
-			
-			li s2, 12
-			beq s5, s2, p233
-			
-			li s2, 13
-			beq s5, s2, p234
-			
-			li s2, 14
-			beq s5, s2, p235
-			
-			j endp23
-				p231:
-				#neu dau la cong
-				addi sp, sp, -16
-				sw ra, 16(sp)
-				sw a0, 12(sp)
-				sw a1, 8(sp)
-				sw a2, 4(sp)
-				sw a3, 0(sp)
-			
-				add a0, zero, s4
-				add a1, zero, s6
-				jal cong
-				
-				lw ra, 16(sp)
-				lw a0, 12(sp)
-				lw a1, 8(sp)
-				lw a2, 4(sp)
-				lw a3, 0(sp)
-				addi sp, sp, 16
-				
-				
-				add s4, zero, a0
-				add s5, zero, t5
-				li s6, 0
-				
-				j endp23
-				p232:
-				#neu dau la tru
-				addi sp, sp, -16
-				sw ra, 16(sp)
-				sw a0, 12(sp)
-				sw a1, 8(sp)
-				sw a2, 4(sp)
-				sw a3, 0(sp)
-			
-				add a0, zero, s4
-				add a1, zero, s6
-				jal tru
-				
-				lw ra, 16(sp)
-				lw a0, 12(sp)
-				lw a1, 8(sp)
-				lw a2, 4(sp)
-				lw a3, 0(sp)
-				addi sp, sp, 16
-				
-				
-				add s4, zero, a0
-				add s5, zero, t5
-				li s6, 0
-				j endp23 
-				p233:
-				#neu dau la nhan
-				addi sp, sp, -16
-				sw ra, 16(sp)
-				sw a0, 12(sp)
-				sw a1, 8(sp)
-				sw a2, 4(sp)
-				sw a3, 0(sp)
-			
-				add a0, zero, s4
-				add a1, zero, s6
-				jal nhan
-				
-				lw ra, 16(sp)
-				lw a0, 12(sp)
-				lw a1, 8(sp)
-				lw a2, 4(sp)
-				lw a3, 0(sp)
-				addi sp, sp, 16
-				
-				
-				add s4, zero, a0
-				add s5, zero, t5
-				li s6, 0
-				j endp23
-				p234:
-				#neu dau la chia
-				addi sp, sp, -16
-				sw ra, 16(sp)
-				sw a0, 12(sp)
-				sw a1, 8(sp)
-				sw a2, 4(sp)
-				sw a3, 0(sp)
-			
-				add a0, zero, s4
-				add a1, zero, s6
-				jal chia
-				
-				lw ra, 16(sp)
-				lw a0, 12(sp)
-				lw a1, 8(sp)
-				lw a2, 4(sp)
-				lw a3, 0(sp)
-				addi sp, sp, 16
-				
-				
-				add s4, zero, a0
-				add s5, zero, t5
-				li s6, 0
-				j endp23
-				p235:
-				#neu dau la modun
-				addi sp, sp, -16
-				sw ra, 16(sp)
-				sw a0, 12(sp)
-				sw a1, 8(sp)
-				sw a2, 4(sp)
-				sw a3, 0(sp)
-			
-				add a0, zero, s4
-				add a1, zero, s6
-				jal modun
-				
-				lw ra, 16(sp)
-				lw a0, 12(sp)
-				lw a1, 8(sp)
-				lw a2, 4(sp)
-				lw a3, 0(sp)
-				addi sp, sp, 16
-				
-				
-				add s4, zero, a0
-				add s5, zero, t5
-				li s6, 0
-				j endp23
-				endp23:
+
+            addi sp, sp, -16
+            sw ra, 16(sp)
+            sw a0, 12(sp)
+            sw a1, 8(sp)
+            sw a2, 4(sp)
+            sw a3, 0(sp)
+
+            add a0, zero, s4
+            add a1, zero, s5
+            add a2, zero, s6
+            jal tinh
+            add s4, zero, a0
+            add s5, zero, t5 
+            li s8, 2
+
+            addi sp, sp, 16
+            lw ra, 16(sp)
+            lw a0, 12(sp)
+            lw a1, 8(sp)
+            lw a2, 4(sp)
+            lw a3, 0(sp)
+
 			j end2	
 		
 		p24:
-			
+			add s4, zero, s7
+            add s5, zero, t5
+            li s8, 2
 			j end2
 		
 		end2:
@@ -268,6 +150,105 @@ update:
 	li s2, 15
 	bne t5, s2, END 
 	#thuc hien neu la = 
+
+    li s2, 1
+		beq s8, s2,p31
+		
+		li s2, 2
+		beq s8, s2, p32
+		
+		li s2, 3
+		beq s8, s2, p33
+		
+		li s2, 4
+		beq s8, s2, p34
+		j end3
+            p31:
+            add s7, s4, zero
+            li s8, 4
+            j end3
+
+            p32:
+            add s6, zero, s4
+            
+                addi sp, sp, -16
+				sw ra, 16(sp)
+				sw a0, 12(sp)
+				sw a1, 8(sp)
+				sw a2, 4(sp)
+				sw a3, 0(sp)
+
+                add a0, zero, s4
+                add a1, zero, s5
+                add a2, zero, s6
+                jal tinh
+                add s7, zero, a0
+                li s8, 4
+
+                addi sp, sp, 16
+				lw ra, 16(sp)
+				lw a0, 12(sp)
+				lw a1, 8(sp)
+				lw a2, 4(sp)
+				lw a3, 0(sp)
+
+            j end3
+
+            p33:
+
+                addi sp, sp, -16
+				sw ra, 16(sp)
+				sw a0, 12(sp)
+				sw a1, 8(sp)
+				sw a2, 4(sp)
+				sw a3, 0(sp)
+
+                add a0, zero, s4
+                add a1, zero, s5
+                add a2, zero, s6
+                jal tinh
+                add s7, zero, a0
+                li s8, 4
+
+                addi sp, sp, 16
+				lw ra, 16(sp)
+				lw a0, 12(sp)
+				lw a1, 8(sp)
+				lw a2, 4(sp)
+				lw a3, 0(sp)
+
+            j end3
+
+            p34:
+
+                add s4, zero, s7
+
+                addi sp, sp, -16
+				sw ra, 16(sp)
+				sw a0, 12(sp)
+				sw a1, 8(sp)
+				sw a2, 4(sp)
+				sw a3, 0(sp)
+
+                add a0, zero, s4
+                add a1, zero, s5
+                add a2, zero, s6
+                jal tinh
+                add s7, zero, a0
+                li s8, 4
+
+                addi sp, sp, 16
+				lw ra, 16(sp)
+				lw a0, 12(sp)
+				lw a1, 8(sp)
+				lw a2, 4(sp)
+				lw a3, 0(sp)
+                #chia truong hop dau hien tai la gi
+            j end3
+
+
+
+        end3:
 	j END 
 	
 	
@@ -276,11 +257,6 @@ update:
 	
 	
 	END:
-	# after converting t5
-	#li s0, 10
-	#mul s1, s1, s0 # shift the whole number to the left
-	#add s1, s1, t5
-	#mv a0, s1
 	
 	
 	
@@ -407,11 +383,15 @@ case_15:
     li t5, 15
     jr ra
     
-    
+
+
+#ham tinh nhan 3 tham so dau vao a0, a1, a2 va return lai vao a0
+tinh: 
+jr ra
+
 #input a0, a1 output a0
 cong:
 jr ra
-
 
 chia:
 jr ra
@@ -422,6 +402,7 @@ jr ra
 tru:
 jr ra
 
-
 modun:
 jr ra
+
+
